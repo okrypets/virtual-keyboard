@@ -1,4 +1,3 @@
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const webpack = require('webpack'); 
 const path = require('path');
 
@@ -21,18 +20,7 @@ module.exports = {
                 presets: ['@babel/preset-env']
               }
             }
-          },
-          {
-            test: /\.scss$/,
-            use: ExtractTextPlugin.extract(
-              {
-                fallback: 'style-loader',
-                use: ['css-loader', 'sass-loader']
-              })
           }
         ]
-      },
-      plugins: [
-        new ExtractTextPlugin('style.css')
-      ]
+      }
   };
