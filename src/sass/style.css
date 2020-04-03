@@ -1,0 +1,14 @@
+textarea {
+  width: 500px;
+  height: 400px;
+}
+
+.keyboard-container button {
+  background-color: #eee;
+  outline: 0;
+}
+
+.keyboard-container button.active {
+  background-color: #54e;
+  transition: background-color cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
