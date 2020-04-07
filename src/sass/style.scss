@@ -1,21 +1,41 @@
+body {
+    text-align: center;
+}
 textarea {
     width: 500px;
-    height: 400px;
+    height: 300px;
 }
 .keyboard-container {
+    text-align: center;
     button {
         background-color: #eee;
         outline: 0;
+        line-height: 1.5;
+        width: 40px;
+        height: 40px;
         &.active {
         background-color: #54e;
+        color: #ffffff;
         transition: background-color cubic-bezier(0.6, -0.28, 0.735, 0.045);
         }
-        &.normal {}
-        &.double-height {}
-        &.double {}
-        &.middle {}
-        &.wide {}
-        &.space {}                
+        &.normal {            
+            
+        }
+        &.double-height {
+            height: 80px;
+        }
+        &.double {
+            width: 80px;
+        }
+        &.middle {
+            width: 80px;
+        }
+        &.wide {
+            width: 80px;
+        }
+        &.space {
+            width: 160px;
+        }                
     }
 }
 

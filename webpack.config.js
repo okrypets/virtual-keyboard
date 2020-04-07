@@ -20,6 +20,29 @@ module.exports = {
                 presets: ['@babel/preset-env']
               }
             }
+          },
+          {
+            test: /\.scss$/,
+            use: [
+              {
+                loader: 'file-loader',
+                options: {
+                  name: 'sass/[name].css',
+                }
+              },
+              {
+                loader: 'extract-loader'
+              },
+              {
+                loader: 'css-loader?-url'
+              },
+              {
+                loader: 'postcss-loader'
+              },
+              {
+                loader: 'sass-loader'
+              }
+            ]
           }
         ]
       }

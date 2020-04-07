@@ -1,7 +1,6 @@
 class Button {
     constructor(value, keyCode, code, width, action, lang) {
         this.value = value;
-        //this.valueShift = valueShift;
         this.keyCode = keyCode;
         this.width = width;
         this.code = code;
