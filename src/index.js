@@ -202,10 +202,7 @@ const handleMouseEvent = (event) => {
             break;
         case "mouseup":
             handleMouseUp(event)
-            break;
-        case "click":
-            handleClick(event)
-            break;
+            break;        
     
         default:
             break;
