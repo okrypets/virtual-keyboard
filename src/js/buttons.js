@@ -94,7 +94,7 @@ export const buttonsArr = [
         value: { en: "Backspace", ru: "Backspace"},
         valueShift: { en: "Backspace", ru: 'Backspace'},
         keyCode: 8,
-        //сode: "Backspace",
+        сode: "Backspace",
         width: "middle",
         action: "backspace"
     },
@@ -102,7 +102,7 @@ export const buttonsArr = [
         value: { en: "Tab", ru: "Tab"},
         valueShift: { en: "Tab", ru: 'Tab'},
         keyCode: 9,
-        //сode: "Tab",
+        code: "Tab",
         width: "double",
         action: "tab"
     },
@@ -172,19 +172,19 @@ export const buttonsArr = [
         keyCode: 219,
         width: "normal"
     },
-    {//Enter
-        value: { en: "Enter", ru: "Enter"},
-        valueShift: { en: "Enter", ru: 'Enter'},
-        keyCode: 13,
-        //code:"Enter",
-        width: "double-height",
-        action: "enter"
+    {
+        value: { en: "Del", ru: "Del"},
+        valueShift: { en: "Del", ru: 'Del'},
+        keyCode: 46,
+        code:"Delete",
+        width: "normal",
+        action: "delete"
     },
     {//capslock
         value: { en: "Caps Lock", ru: "Caps Lock"},
         valueShift: { en: "Caps Lock", ru: 'Caps Lock'},
         keyCode: 20,
-        //code:"CapsLock",
+        code:"CapsLock",
         width: "double",
         action: "capslock"
     },
@@ -259,6 +259,14 @@ export const buttonsArr = [
         valueShift: { en: '|', ru: '/'},
         keyCode: 220,
         width: "normal"
+    },    
+    {//Enter
+        value: { en: "Enter", ru: "Enter"},
+        valueShift: { en: "Enter", ru: 'Enter'},
+        keyCode: 13,
+        //code:"Enter",
+        width: "double",
+        action: "enter"
     },
     {//Shift
         value: { en: 'Shift', ru: 'Shift'},
@@ -329,12 +337,12 @@ export const buttonsArr = [
         width: "normal"
     },
     {//ArrowUp
-        value: { en: 'Up', ru: 'Up'},
-        valueShift: { en: 'Up', ru: 'Up'},
+        value: { en: '▲', ru: '▲'},
+        valueShift: { en: '▲', ru: '▲'},
         keyCode: 38,
         //code:"ArrowUp",
         width: "normal",
-        action: "keyUp"
+       // action: "keyUp"
     },
     {//Shift
         value: { en: 'Shift', ru: 'Shift'},
@@ -391,27 +399,27 @@ export const buttonsArr = [
         action: "ctrl"
     },
     {//ArrowLeft
-        value: { en: 'Left', ru: 'Left'},
-        valueShift: { en: 'Left', ru: 'Left'},
+        value: { en: '◄', ru: '◄'},
+        valueShift: { en: '◄', ru: '◄'},
         keyCode: 37,
         //code:"ArrowLeft",
         width: "normal",
-        action: "keyLeft"
+        //action: "keyLeft"
     },
     {//ArrowDown
-        value: { en: 'Down', ru: 'Down'},
-        valueShift: { en: 'Down', ru: 'Down'},
+        value: { en: '▼', ru: '▼'},
+        valueShift: { en: '▼', ru: '▼'},
         keyCode: 40,
         //code:"ArrowDown",
         width: "normal",
-        action: "keyDown"
+        //action: "keyDown"
     },
     {//ArrowRight
-        value: { en: 'Right', ru: 'Right'},
-        valueShift: { en: 'Right', ru: 'Right'},
+        value: { en: '►', ru: '►'},
+        valueShift: { en: '►', ru: '►'},
         keyCode: 39,
         //code:"ArrowRight",
         width: "normal",
-        action: "keyRight"
+        //action: "keyRight"
     },
 ]

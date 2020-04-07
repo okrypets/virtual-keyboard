@@ -1,9 +1,10 @@
 
 import { buttonsArr } from './js/buttons';
-import { setAction, removeAction, isAction, doShift } from './js/utils';
+import { setAction, removeAction, isAction, doShift, getElmentByKeyCode, getSelectionPosition } from './js/utils';
 import Button from './js/Button';
 
 const textArea = document.createElement('textarea'); 
+let buttonsFromData = []
 
 class Keyboard {
     constructor() {
@@ -17,10 +18,10 @@ class Keyboard {
         this.setIsShift = this.setIsShift.bind(this);       
     }
 
-    init() {
+    init() {        
         console.log(`Язык - ${this.lang}`)          
         document.querySelector("body").insertAdjacentElement("beforeend", this.keyboardContainer);        
-        this.keyboardContainer.classList.add("keyboard-container");        
+        this.keyboardContainer.classList.add("keyboard-container");
         this.renderButtonToDom();
         this.eventListner();
     }
@@ -35,10 +36,41 @@ class Keyboard {
 
     renderButtonToDom () {
         let keyboardWrapper = this.getKeyboardWrapper();
-        this.generateButtonsFromData().forEach(button => {
-            keyboardWrapper.append(button.getButtonTemplate())
+        buttonsFromData = this.generateButtonsFromData();
+        console.log(buttonsFromData)
+        buttonsFromData.map(button => {
+            const {value, valueShift,  keyCode, code, width, action} = button;
+            
+            const shouldBr = ["Tab","CapsLock","ShiftLeft","ControlLeft"].some(it => it === code);
+            const brElement = document.createElement('br')
+           
+                if (shouldBr) {
+                keyboardWrapper.append(button.getButtonTemplate());
+                keyboardWrapper.append(brElement);                                
+            }
+            keyboardWrapper.append(button.getButtonTemplate());
+            
+            
         })
     }
+
+    rerenderButtonstoDom () {
+        let keyboardWrapperchildNodes = document.querySelector("body > section.keyboard-container").childNodes;
+        keyboardWrapperchildNodes.forEach(chld => {
+            const { dataset: { id, action } } = chld;
+              
+            if (!action && id ) {
+                let chldFromData = buttonsArr.find(it => it.keyCode === +id);
+                let buttonValue = this.getButtonValue(chldFromData);
+                chld.value = buttonValue[this.lang];
+                chld.innerText = buttonValue[this.lang];
+                return chld;
+            } else {
+                return chld;
+            }
+        })
+    }
+
 
     getKeyboardWrapper () {
         const keyboardContainer = document.querySelector("section.keyboard-container");
@@ -46,14 +78,15 @@ class Keyboard {
         return keyboardContainer;
     }
     
-    generateButtonsFromData () {
+    generateButtonsFromData () {        
         let buttons = [];
-        buttonsArr.forEach(item => {
-            const {value, valueShift,  keyCode, code = "", width, action = ""} = item;
-            let getButtonValue = this.getButtonValue(item);
-            let button = new Button(getButtonValue, keyCode, code, width, action, this.lang);            
-            buttons.push(button);
-        });
+            buttonsArr.forEach(item => {
+                const {value, valueShift,  keyCode, code = "", width, action = ""} = item;
+                let buttonValue = this.getButtonValue(item);            
+                let button = new Button(buttonValue, keyCode, code, width, action, this.lang);
+                buttons.push(button);
+            });
+        
         return buttons;
     }   
     
@@ -66,26 +99,25 @@ class Keyboard {
     }
 
     setLang() {
-        //let langFromLocalStarage = localStorage.getItem('VirtualKeyboardLang') || "ru";
         switch (this.lang) {
             case "ru":
                 localStorage.setItem('VirtualKeyboardLang', 'en')
                 this.lang = localStorage.getItem('VirtualKeyboardLang');
-                this.renderButtonToDom();
+                this.rerenderButtonstoDom()
                 break;
             case "en":
                 localStorage.setItem('VirtualKeyboardLang', 'ru')
                 this.lang = localStorage.getItem('VirtualKeyboardLang');
-                this.renderButtonToDom();
+                this.rerenderButtonstoDom()
                 break;
         
-            default:
+            default: "ru"
                 break;
-        }        
+        }     
         console.log(`Язык - ${this.lang}`)
     }
 
-    getLang() {
+    getLang() {        
         return this.lang;
     }
 
@@ -106,7 +138,8 @@ class Keyboard {
     setIsShift (bool) {
         this.isShiftActive = bool;
         this.changeLang()
-        this.renderButtonToDom();          
+        this.rerenderButtonstoDom()
+                  
         console.log(`Shift - ${this.isShiftActive}`);
     }
     
@@ -120,53 +153,21 @@ class Keyboard {
         this.isCapsLockActive = bool;
         this.setIsShift(bool);
         console.log(`Caps Lock - ${this.isCapsLockActive}`); 
-    }
-
-    setIsCtrl () {
-        
-    }
-
-    // setAction(action, _isAction) {
-    //     if (_isAction) { 
-    //         this.isAction = true;
-    //         this.action.push(action);
-    //         //Button.setAction(this.action)
-    //      } else {
-    //           this.isAction = false 
-    //           this.action = [];              
-    //         }
-    // }   
-    
-}
-
-
-window.onload = () => {
-    
-
-    if (textArea) {
-        document.querySelector("body").insertAdjacentElement("afterbegin", textArea);
-    }
-
-    if (buttonsArr) {
-        keyboard.init();
     }    
 }
 
 
+window.onload = () => { 
+    if (textArea) {
+        document.querySelector("body").insertAdjacentElement("afterbegin", textArea);
+    }
+    if (buttonsArr) {
+        keyboard.init();
+        document.querySelector("body").insertAdjacentHTML("afterbegin", "<p>Переключение клавиатуры - Alt+Shift. Windows OS</p>");
+    }    
+}
 
-
-//const keyCodeData = []
 let innerTextArr = [];
-
-
-
-// const setCharItem = (key) => {
-//     console.log(event)
-//     const { keyCode } = key;
-//     innerTextArr.push(key);
-//     textAreaElement.innerText = innerTextArr.join("");
-// }
-
 
 const  handleKeyboardEvent = (event) => {
     const { key, keyCode, type, code } = event;
@@ -177,6 +178,9 @@ const  handleKeyboardEvent = (event) => {
     switch (type) {
         case "keydown":
             handleKeyDown(pressElement)
+            if (!isActionKey ) { 
+                setTexareaValue(keyCode);
+            }
             break;
         case "keyup":
             handleKeyUp(pressElement)
@@ -185,13 +189,11 @@ const  handleKeyboardEvent = (event) => {
         default:
             break;
     }
-    if (!isActionKey) { 
-        setTexareaValue(key);
-    }
+    
 }
 
 const handleMouseEvent = (event) => {
-    const { key, keyCode, type } = event;
+    const { type } = event;    
 
     console.log(event)
     switch (type) {
@@ -200,45 +202,69 @@ const handleMouseEvent = (event) => {
             break;
         case "mouseup":
             handleMouseUp(event)
-            break;
-        case "click":
-            handleClick(event)
-            break;
+            break;        
     
         default:
             break;
     }
 }
 
-const setTexareaValue = (val) => {
-    innerTextArr.push(val);
-    textArea.value = textArea.value + val;
+const setTexareaValue = (keyCode) => {
+    let textareaElement = document.querySelector("textarea");
+    let val = getElmentByKeyCode(keyCode);
+    innerTextArr.push(val);    
+    let text = innerTextArr.join("");
+    textareaElement.innerText = text;
 }
 
-// const removeEvent = (element) => {
-//     element.classList.remove("active");
-// }
+const removeTextareaTextItem = (keyCode) => {
+    let textareaElement = document.querySelector("textarea");
+    let carretDiapozon = getSelectionPosition();
+    let newInnerTextArr = innerTextArr.slice();
+    if (carretDiapozon[0] !== carretDiapozon[1]) {        
+        let part1 = newInnerTextArr.slice(0, carretDiapozon[0])
+        let part2 = newInnerTextArr.slice(carretDiapozon[1])
+        innerTextArr = [...part1, ...part2];
+    } else {
+        let part1, part2;
+        switch (keyCode) {
+            case 8:
+                part1 = carretDiapozon[0] === 0 ? [] : newInnerTextArr.slice(0, carretDiapozon[0]-1)
+                part2 = newInnerTextArr.slice(carretDiapozon[0])
+                innerTextArr = [...part1, ...part2];
+                break;
 
-const handleClick = (event) => {
-    const { target: { value, dataset: { id, action } } } = event;
-    const isActionButton = isAction(event)
-    //let clickElement = document.querySelector(`button[data-id = "${id}"]`)
-    if (!isActionButton) { 
-        setTexareaValue(value);
+            case 46:
+                part1 = newInnerTextArr.slice(0, carretDiapozon[0])
+                part2 = newInnerTextArr.slice(carretDiapozon[0]+1)
+                innerTextArr = [...part1, ...part2];
+                break;
+        
+            default:
+                break;
+        }
     }
-    //document.querySelector(".keyboard-container").removeEventListener("click", removeEvent(clickElement));
+
+        
+        let text = innerTextArr.join("");
+        textareaElement.innerText = text;
 }
 
 const handleMouseDown = (event) => {
+    const { target: { value, dataset: { id, action } } } = event;
+    const isActionButton = isAction(event);
+    if (!isActionButton) { 
+        setTexareaValue(+id);
+    } 
     setActive(event.target)
 }
 
 const handleMouseUp = (event) => {
-    removeActive(event.target)
+    removeActive(event.target)    
+    isAction(event);  
 }
 
 const handleKeyDown = (element) => {
-    //console.log(element)
     setActive(element)
 }
 
@@ -247,33 +273,20 @@ const handleKeyUp = (element) => {
 }
 
 const setActive = (element) => {
-    // const { attributes, classList } = element;
-    // console.log(attributes["data-id"].value);
-
-    // let isCaplsLockShouldActive = !classList.contains("active") && Keyboard.getIsCapsLock;
-    
-    // let shouldNotAdd = !isCaplsLockShouldActive;
-
-    // if (shouldNotAdd) {
-    //     return false;
-    // } else {
-    //     element.classList.add("active")
-    // }
-    element.classList.add("active")    
+    if (!element) return;
+    const { attributes } = element;
+    if (attributes["data-id"] && attributes["data-id"].value === "20") {
+        element.classList.toggle("active")
+    } else element.classList.add("active")    
 }
 const removeActive = (element) => {
-    // const { attributes, classList } = element;
-    // console.log(attributes["data-id"].value)
+    if (!element) return;
+    const { attributes = {} } = element;
     
-    // let isCaplsLockShouldRemoveActive = classList.contains("active") && attributes["data-id"].value === 20 && Keyboard.getIsCapsLock;
-
-    // let shouldNotRemove = isCaplsLockShouldRemoveActive;
-    // if (shouldNotRemove) {
-    //     return false; 
-    // } else {
-    //     element.classList.remove("active");
-    // }    
-    element.classList.remove("active");
+    
+    if ( attributes["data-id"] && attributes["data-id"].value !== "20") {    
+         element.classList.remove("active");
+     }    
 }
 
 const setShift = (bool) => {
@@ -288,12 +301,14 @@ const setAlt = (bool) => {
     keyboard.setIsAlt(bool);
 }
 
-const setIsCtrl = () => {
-    
+const getLangIs = () => {    
+    return keyboard.getLang();
 }
 
-
+const getIsShift = () => {
+    return keyboard.getIsShift()
+}
 
 let keyboard = new Keyboard();
 export default Keyboard;
-export { setShift, setAlt, setCapsLock };
+export { setShift, setAlt, setCapsLock, getLangIs, getIsShift, removeTextareaTextItem };
