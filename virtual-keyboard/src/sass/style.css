@@ -1,0 +1,48 @@
+body {
+  text-align: center;
+}
+
+textarea {
+  width: 500px;
+  height: 300px;
+}
+
+.keyboard-container {
+  text-align: center;
+}
+
+.keyboard-container button {
+  background-color: #eee;
+  outline: 0;
+  line-height: 1.5;
+  width: 40px;
+  height: 40px;
+}
+
+.keyboard-container button.active {
+  background-color: #54e;
+  color: #ffffff;
+  -webkit-transition: background-color cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  transition: background-color cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
+
+.keyboard-container button.double-height {
+  height: 80px;
+}
+
+.keyboard-container button.double {
+  width: 80px;
+}
+
+.keyboard-container button.middle {
+  width: 80px;
+}
+
+.keyboard-container button.wide {
+  width: 80px;
+}
+
+.keyboard-container button.space {
+  width: 160px;
+}
+/*# sourceMappingURL=style.css.map */
